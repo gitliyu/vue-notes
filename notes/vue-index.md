@@ -9,8 +9,8 @@
     |—  flow Vue使用了Flow来进行静态类型检查，这里定义了声明了一些静态类型
 
     |—  packages vue还可以分别生成其它的npm包
-
-	|—  script  打包相关的配置文件
+    
+    |—  script 打包相关的配置文件
 
     |—  src 主要源码所在位置
 
@@ -51,11 +51,11 @@
             |— weex weex端相关文件
 
         |— server 服务端渲染相关
-
-        |— sfc 解析，通过使用webpack将.vue文件内容解析。
+	
+        |— sfc 解析，通过使用webpack将.vue文件内容解析
 
         |— shared 共享的工具方法
 
     |—  test 测试文件
-
-	|—  types typescript相关
+    
+    |—  types typescript相关
