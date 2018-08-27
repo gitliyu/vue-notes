@@ -4,8 +4,7 @@
 ```json
 {
   "scripts": {
-    "dev": "rollup -w -c scripts/config.js --environment TARGET:web-full-dev",
-    ……
+    "dev": "rollup -w -c scripts/config.js --environment TARGET:web-full-dev"
   }
 }
 ```
@@ -30,21 +29,21 @@ const builds = {
 src/platforms/web/entry-runtime-with-compiler.js
 ```
 接下来我们一步一步的来找
-```javascript
-// src/platforms/web/entry-runtime-with-compiler.js
 
+src/platforms/web/entry-runtime-with-compiler.js
+```javascript
 import config from 'core/config'
 import { warn, cached } from 'core/util/index'
 import { mark, measure } from 'core/util/perf'
 
 import Vue from './runtime/index'
-
-// src/platforms/web/runtime/index.js
-
+```
+ src/platforms/web/runtime/index.js
+```javascript
 import Vue from 'core/index'
-
-// src/core/index.js
-
+```
+src/core/index.js
+```javascript
 // 定义Vue 核心方法
 import Vue from './instance/index'
 // 初始化全局Api		
@@ -83,6 +82,7 @@ export default Vue
 
 ```
 可以很清楚的看到，Vue实际上是使用构造函数创建的一个对象方法，之后使用了类似`initMixin`之类的方法来初始化一下功能，挂载了很多实例化之后调用的方法。
+
 接下来看一下`initGlobalAPI`这个方法，打开`src/core/global-api/index.js`文件，下面贴一下主要代码
 ```javascript
 export function initGlobalAPI (Vue: GlobalAPI) {
