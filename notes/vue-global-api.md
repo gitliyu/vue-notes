@@ -3,7 +3,7 @@
 
 参考： ['learnVue'](https://github.com/answershuto/learnVue)
 ### 文件结构
-首先看一下文件结构，`index.js`里面的引入路径可以很清楚的看出来各个文件的作用
+首先看一下文件结构，`index.js`里面的引入路径可以很清楚的看出来各个文件的作用，这一篇蛀牙介绍一下`global-api`目录，对于其他位置引入注册的方法暂时不去分析。
 ```
  |— global-api
    |—asssets.js   // Vue.component, Vue.directive, Vue.filter
@@ -93,4 +93,152 @@ declare interface GlobalAPI {
 };
 
 ```
-> 未完待续
+
+### initUse 
+Vue.use方法用于安装插件
+```javascript
+export function initUse (Vue: GlobalAPI) {
+  Vue.use = function (plugin: Function | Object) {
+    // installedPlugins为已安装插件，检查是否已安装
+    const installedPlugins = (this._installedPlugins || (this._installedPlugins = []))
+    if (installedPlugins.indexOf(plugin) > -1) {
+      return this
+    }
+
+    // additional parameters
+    // 添加Vue参数
+    const args = toArray(arguments, 1)
+    args.unshift(this)
+    // 如果有install方法，执行install方法，如果传入对象是一个方法，直接执行
+    if (typeof plugin.install === 'function') {
+      plugin.install.apply(plugin, args)
+    } else if (typeof plugin === 'function') {
+      plugin.apply(null, args)
+    }
+    // 添加到已安装插件
+    installedPlugins.push(plugin)
+    return this
+  }
+}
+```
+
+### initMixin
+Vue.mixin用于合并实例对象的options，使用了`util`文件中定义的`mergeOptions`方法
+```javascript
+export function initMixin (Vue: GlobalAPI) {
+  Vue.mixin = function (mixin: Object) {
+    this.options = mergeOptions(this.options, mixin)
+    return this
+  }
+}
+```
+
+### initExtend
+`initExtend`方法在Vue上添加了`Vue.cid`静态属性，和`Vue.extend`静态方法。
+```javascript
+export function initExtend (Vue: GlobalAPI) {
+  /*
+    每个构造函数实例（包括Vue本身）都会有一个唯一的cid
+    它为我们能够创造继承创建自构造函数并进行缓存创造了可能
+  */
+  Vue.cid = 0
+  let cid = 1
+
+  /*
+    使用基础 Vue 构造器，创建一个“子类”。
+    其实就是扩展了基础构造器，形成了一个可复用的有指定选项功能的子构造器。
+    参数是一个包含组件option的对象。
+  */
+  Vue.extend = function (extendOptions: Object): Function {
+    ……
+  }
+}
+
+```
+
+### initAssetRegisters
+也是比较好理解的，通过遍历添加了Vue.component，Vue.directive，Vue.filter三个静态方法
+```javasript
+export function initAssetRegisters (Vue: GlobalAPI) {
+  /**
+   * Create asset registration methods.
+   */
+  ASSET_TYPES.forEach(type => {
+    Vue[type] = function (
+      id: string,
+      definition: Function | Object
+    ): Function | Object | void {
+      if (!definition) {
+        return this.options[type + 's'][id]
+      } else {
+        /* istanbul ignore if */
+        if (process.env.NODE_ENV !== 'production' && type === 'component') {
+          validateComponentName(id)
+        }
+        if (type === 'component' && isPlainObject(definition)) {
+          definition.name = definition.name || id
+          definition = this.options._base.extend(definition)
+        }
+        if (type === 'directive' && typeof definition === 'function') {
+          definition = { bind: definition, update: definition }
+        }
+        this.options[type + 's'][id] = definition
+        return definition
+      }
+    }
+  })
+}
+```
+`ASSET_TYPES`常量是从`shared/constants.js`引入的，打开后我们可以看到
+```
+export const ASSET_TYPES = [
+  'component',
+  'directive',
+  'filter'
+]
+```
+
+### 全局API整理
+最后对 Vue 构造函数全局API(静态属性和方法)进行一下整理，便于看源码时查看方法的对应位置。
+```
+// initGlobalAPI  global-api/index.js
+Vue.config
+Vue.util = {
+  warn,
+  extend,
+  mergeOptions,
+  defineReactive
+}
+Vue.set = set
+Vue.delete = del
+Vue.nextTick = nextTick
+Vue.options = {
+  components: {
+    KeepAlive
+  },
+  directives: Object.create(null),
+  filters: Object.create(null),
+  _base: Vue
+}
+
+// initUse global-api/use.js
+Vue.use = function (plugin: Function | Object) {}
+
+// initMixin  global-api/mixin.js
+Vue.mixin = function (mixin: Object) {}
+
+// initExtend  global-api/extend.js
+Vue.cid = 0
+Vue.extend = function (extendOptions: Object): Function {}
+
+// initAssetRegisters  global-api/assets.js
+Vue.component =
+Vue.directive =
+Vue.filter = function (
+  id: string,
+  definition: Function | Object
+): Function | Object | void {}
+
+// entry-runtime-with-compiler.js
+Vue.compile = compileToFunctions
+```
