@@ -128,19 +128,19 @@ if (options && options._isComponent) {
 ```
 接着，是对vue实例进行一些初始化，如生命周期，事件中心，渲染等等，可以看到这里的init方法和`instance.js`中的mixin方法都是对应的，在这里初始化之后再对实例化的对象进行方法的挂载。
 ```javascript
-/*初始化生命周期*/
+// 初始化生命周期
 initLifecycle(vm)
-/*初始化事件*/
+// 初始化事件
 initEvents(vm)
-/*初始化render*/
+// 初始化render
 initRender(vm)
-/*调用beforeCreate钩子函数并且触发beforeCreate钩子事件*/
+// 调用beforeCreate钩子函数并且触发beforeCreate钩子事件
 callHook(vm, 'beforeCreate')
 initInjections(vm) // resolve injections before data/props
-/*初始化props、methods、data、computed与watch*/
+// 初始化props、methods、data、computed与watch
 initState(vm)
 initProvide(vm) // resolve provide after data/props
-/*调用created钩子函数并且触发created钩子事件*/
+// 调用created钩子函数并且触发created钩子事件
 callHook(vm, 'created')
 ```
 最后是判断vm实例是否存在`vm.$options.el`，存在的话就将vm挂载到这个dom节点上，完成渲染，对于$mount以后会介绍
@@ -154,20 +154,20 @@ if (vm.$options.el) {
 export function initState (vm: Component) {
   vm._watchers = []
   const opts = vm.$options
-  /*初始化props*/
+  // 初始化props
   if (opts.props) initProps(vm, opts.props)
-  /*初始化方法*/
+  // 初始化方法
   if (opts.methods) initMethods(vm, opts.methods)
-  /*初始化data*/
+  // 初始化data
   if (opts.data) {
     initData(vm)
   } else {
-    /*该组件没有data的时候绑定一个空对象*/
+    // 该组件没有data的时候绑定一个空对象
     observe(vm._data = {}, true /* asRootData */)
   }
-  /*初始化computed*/
+  // 初始化computed
   if (opts.computed) initComputed(vm, opts.computed)
-  /*初始化watchers*/
+  // 初始化watchers
   if (opts.watch) initWatch(vm, opts.watch)
 }
 ```
@@ -202,13 +202,13 @@ export function stateMixin (Vue: Class<Component>) {
     options = options || {}
     options.user = true
     const watcher = new Watcher(vm, expOrFn, cb, options)
-    /*有immediate参数的时候会立即执行*/
+    // 有immediate参数的时候会立即执行
     if (options.immediate) {
       cb.call(vm, watcher.value)
     }
-    /*返回一个取消观察函数，用来停止触发回调*/
+    // 返回一个取消观察函数，用来停止触发回调
     return function unwatchFn () {
-      /*将自身从所有依赖收集订阅列表删除*/
+      // 将自身从所有依赖收集订阅列表删除
       watcher.teardown()
     }
   }
@@ -255,11 +255,12 @@ export function initLifecycle (vm: Component) {
 
 #### initRender
 ```javascript
-/*初始化render*/
+// 初始化render
 export function initRender (vm: Component) {
   vm._vnode = null // the root of the child tree
   vm._staticTrees = null
-  const parentVnode = vm.$vnode = vm.$options._parentVnode // the placeholder node in parent tree  父树中的占位符节点
+  // the placeholder node in parent tree  父树中的占位符节点
+  const parentVnode = vm.$vnode = vm.$options._parentVnode 
   const renderContext = parentVnode && parentVnode.context
   vm.$slots = resolveSlots(vm.$options._renderChildren, renderContext)
   vm.$scopedSlots = emptyObject
@@ -267,11 +268,13 @@ export function initRender (vm: Component) {
   // so that we get proper render context inside it.
   // args order: tag, data, children, normalizationType, alwaysNormalize
   // internal version is used by render functions compiled from templates
-  /*将createElement函数绑定到该实例上，该vm存在闭包中，不可修改，vm实例则固定。这样我们就可以得到正确的上下文渲染*/
+  /*
+    将createElement函数绑定到该实例上，该vm存在闭包中，不可修改，vm实例则固定。这样我们就可以得到正确的上下文渲染
+  */
   vm._c = (a, b, c, d) => createElement(vm, a, b, c, d, false)
   // normalization is always applied for the public version, used in
   // user-written render functions.
-  /*常规方法呗用于公共版本，被用来作为用户界面的渲染方法*/
+  // 常规方法呗用于公共版本，被用来作为用户界面的渲染方法
   vm.$createElement = (a, b, c, d) => createElement(vm, a, b, c, d, true)
 }
 ```

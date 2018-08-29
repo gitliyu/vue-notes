@@ -200,7 +200,7 @@ export const ASSET_TYPES = [
 
 ### 全局API整理
 最后对 Vue 构造函数全局API(静态属性和方法)进行一下整理，便于看源码时查看方法的对应位置。
-```
+```javascript
 // initGlobalAPI  global-api/index.js
 Vue.config
 Vue.util = {
