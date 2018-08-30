@@ -41,7 +41,8 @@ function Observer(obj){
 	    		// 如果当前正有Watcher触发，将Watcher添加到队列中
 	    		// Dep方法会在下面介绍
 	    		if (Dep.target) {
-	    			// 当然，实际上添加的并不是相同的Dep.target
+	    			// 当然，实际跟demo不同，添加的并不是相同的Dep.target
+	    			// 而是id增加之后的Watcher
 	    			dep.addSub(Dep.target);
 	    		};
 	    		return value;
@@ -78,6 +79,7 @@ function Watcher(fn){
 	// 响应方法，触发回调
 	this.update = () => {
 		Dep.target = this;
+		// 回调调用时会触发obj.a的get方法设置为其Watcher
 		fn();
 		Dep.target = null;
 	}

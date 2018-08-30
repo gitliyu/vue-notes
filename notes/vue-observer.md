@@ -37,7 +37,8 @@ function Observer(obj){
                 // 如果当前正有Watcher触发，将Watcher添加到队列中
                 // Dep方法会在下面介绍
                 if (Dep.target) {
-                    // 当然，实际上添加的并不是相同的Dep.target
+                    // 当然，实际跟demo不同，添加的并不是相同的Dep.target
+                    // 而是id增加之后的Watcher
                     dep.addSub(Dep.target);
                 };
                 return value;
@@ -80,6 +81,7 @@ function Watcher(fn){
     // 响应方法，触发回调
     this.update = () => {
         Dep.target = this;
+        // 回调调用时会触发obj.a的get方法设置为其Watcher
         fn();
         Dep.target = null;
     }
@@ -88,7 +90,7 @@ function Watcher(fn){
 ```
 Watcher内部的更新方法被触发时，会将自身存放在Dep上作为当前响应的Watcher，回调结束后清空
 
-自运行一次update方法是为了在最初渲染模板过程中，调用数据对象的getter时建立两者之间的关系，否则Watcher不会生效
+自运行一次update方法是为了在最初渲染模板过程中，调用数据对象时触发get方法在Dep队列中增加对应的Watcher
 ```javascript
 <body>
     <div id="box"></div>		
