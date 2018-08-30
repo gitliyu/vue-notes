@@ -8,6 +8,8 @@
 4. 虚拟DOM及VNode节点
 5. Render方法解析
 6. 生命周期
-7. 双向绑定原理
+7. ['Observer与数据驱动原理'](https://github.com/gitliyu/vue-notes/blob/master/notes/vue-observer.md)
+8. Directive指令
+9. Compile编译原理
 
 > TODO

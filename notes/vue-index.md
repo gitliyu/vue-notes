@@ -1,4 +1,4 @@
-###  源码目录结构
+# 源码目录结构
 分析Vue源码的第一步，先了解源码中目录的设计和各个模块的功能，对应Vue版本为2.5.17，以后会对目录进行补充。
 
 参考： ['vue2.0-source'](https://github.com/liutao/vue2.0-source)  ['vue-analysis'](https://github.com/ustbhuangyi/vue-analysis)

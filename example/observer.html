@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title></title>
+</head>
+<body>
+	<div id="box"></div>		
+</body>
+</html>
+<script type="text/javascript">
+var obj = {
+	a: 1,
+	b: 2,
+	c: 3
+}
+
+new Observer(obj);
+new Watcher(function(){
+	document.querySelector("#box").innerHTML = obj.a;
+})
+
+function Observer(obj){
+	// 设置对应的Dep
+	let dep = new Dep();
+
+	// 遍历所有对象属性设置setter/getter
+	Object.keys(obj).forEach( key => {
+		let value = obj[key];
+		// 判断属性为为对象后递归
+		if (value && typeof value === 'object') {
+			Object.keys(value).forEach( index => {
+				new Observer(value);
+			})
+		};
+
+		Object.defineProperty(obj, key, {
+			enumerable: true,  
+	    	configurable: true,
+	    	// 设置watcher
+	    	get: () => {
+	    		// 如果当前正有Watcher触发，将Watcher添加到队列中
+	    		// Dep方法会在下面介绍
+	    		if (Dep.target) {
+	    			// 当然，实际上添加的并不是相同的Dep.target
+	    			dep.addSub(Dep.target);
+	    		};
+	    		return value;
+	    	},
+	    	// 触发响应变化
+	    	set: val => {
+	    		value = val;
+	    		dep.notify();
+	    	}
+		})
+	})
+}
+
+function Dep(){
+	// 存放当前触发的watcher
+	this.target = null;
+	// 存放watcher队列
+	this.subs = [];
+
+	// 向队列中添加watcher 
+	this.addSub = watcher => {
+		this.subs.push(watcher);
+	}
+
+	// 通知watcher
+	this.notify = function(){
+		this.subs.forEach( watcher => {
+			watcher.update();
+		});
+	}
+}
+
+function Watcher(fn){
+	// 响应方法，触发回调
+	this.update = () => {
+		Dep.target = this;
+		fn();
+		Dep.target = null;
+	}
+	this.update();
+}
+</script>
