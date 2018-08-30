@@ -4,7 +4,9 @@ Observer是Vue很核心的一个功能，是实现数据双向绑定的关键，
 参考： ['vue2.0-source'](https://github.com/liutao/vue2.0-source)
 
 首先需要说明的是，Observer依赖于['Object.defineProperty()'](https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/Object/defineProperty)方法，这也是Vue不支持ie9以下浏览器的原因，关于这个方法就不进行介绍了
-数据驱动实现的基本原理就是，通过对象属性的get方法设置观察者，在数据变化也就是set方法触发时更新虚拟dom结构，在下次tick驱动视图更新。
+
+数据驱动实现的基本原理就是，通过对象属性的get方法设置观察者，在数据变化也就是set方法触发时更新虚拟dom结构，在下次tick驱动视图更新
+
 主要分为以下三部分：
 1. Observer: Vue初始化时调用，递归地为对象所有属性设置setter/getter
 2. Watcher: 观察者，当监听的数据值修改时，执行响应的回调函数
@@ -49,7 +51,7 @@ function Observer(obj){
     })
 }
 ```
-可以看到，在Observer初始化时，首先会创建一个对应的Dep，之后会递归的为所有对象属性设置setter/getter。
+可以看到，在Observer初始化时，首先会创建一个对应的Dep，之后会递归的为所有对象属性设置setter/getter
 
 ```javascript
 function Dep(){
@@ -85,7 +87,8 @@ function Watcher(fn){
 }
 ```
 Watcher内部的更新方法被触发时，会将自身存放在Dep上作为当前响应的Watcher，回调结束后清空
-自运行一次update方法是为了在最初渲染模板过程中，调用数据对象的getter时建立两者之间的关系，否则Watcher不会生效。
+
+自运行一次update方法是为了在最初渲染模板过程中，调用数据对象的getter时建立两者之间的关系，否则Watcher不会生效
 ```javascript
 <body>
     <div id="box"></div>		
@@ -105,8 +108,13 @@ Watcher内部的更新方法被触发时，会将自身存放在Dep上作为当�
 </script>
 ```
 接下来就可以调用Observer方法对对象属性进行设置了，执行之后将obj对象打印出来，可以看到如下结果
+
 !['Observer设置后的obj对象'](https://github.com/gitliyu/vue-notes/blob/master/images/observer.png)
+
 那么如何去验证方法是否生效呢，打开控制台改变obj对象的属性，比如我们输入`obj.a = 2`，而可以看到如下结果
-!['结果'](https://github.com/gitliyu/vue-notes/blob/master/images/observer-result.png),这样就大概的实现了数据驱动视图，接下来对源码进行分析。
+
+!['结果'](https://github.com/gitliyu/vue-notes/blob/master/images/observer-result.png)
+
+这样就大概的实现了数据驱动视图，接下来对源码进行分析。
 
 > 未完待续
