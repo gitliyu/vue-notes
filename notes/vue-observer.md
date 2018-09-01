@@ -3,12 +3,12 @@ Observer是Vue很核心的一个功能，是实现数据双向绑定的关键，
 
 参考： ['vue2.0-source'](https://github.com/liutao/vue2.0-source)
 
-首先需要说明的是，Observer依赖于['Object.defineProperty()'](https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/Object/defineProperty)方法，这也是Vue不支持ie9以下浏览器的原因，关于这个方法就不进行介绍了
+首先需要说明的是，Observer依赖于['Object.defineProperty()'](https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/Object/defineProperty)方法，这也是Vue不支持ie9以下浏览器的原因，关于这个方法可以点击查看文档
 
 数据驱动实现的基本原理就是，通过对象属性的get方法设置观察者，在数据变化也就是set方法触发时更新虚拟dom结构，在下次tick驱动视图更新
 
 主要分为以下三部分：
-1. Observer: Vue初始化时调用，递归地为对象所有属性设置setter/getter
+1. Observer: Vue初始化时调用，递归地为data，props，computed对象所有属性设置setter/getter
 2. Watcher: 观察者，当监听的数据值修改时，执行响应的回调函数
 3. Dep: 每一个Observer对应一个Dep，作为Observer和所有Watcher通信的中间件，内部保存与该Observer相关的Watcher
 
@@ -22,8 +22,8 @@ function Observer(obj){
     // 遍历所有对象属性设置setter/getter
     Object.keys(obj).forEach( key => {
         let value = obj[key];
-        // 判断属性为为对象后递归
-        if (value && typeof value === 'object') {
+        // 判断属性为对象后递归
+        if (value && typeof value === 'object' && !Array.isArray(value)) {
             Object.keys(value).forEach( index => {
                 new Observer(value);
             })
@@ -67,7 +67,7 @@ function Dep(){
     }
 
     // 通知Watcher
-    this.notify = function(){
+    this.notify = () => {
         this.subs.forEach( watcher => {
             watcher.update();
         });
@@ -104,7 +104,7 @@ Watcher内部的更新方法被触发时，会将自身存放在Dep上作为当�
     }
 
     new Observer(obj);
-    new Watcher(function(){
+    new Watcher(() => {
         document.querySelector("#box").innerHTML = obj.a;
     })
 </script>

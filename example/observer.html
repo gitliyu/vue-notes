@@ -15,7 +15,7 @@ var obj = {
 }
 
 new Observer(obj);
-new Watcher(function(){
+new Watcher(() => {
 	document.querySelector("#box").innerHTML = obj.a;
 })
 
@@ -26,8 +26,8 @@ function Observer(obj){
 	// 遍历所有对象属性设置setter/getter
 	Object.keys(obj).forEach( key => {
 		let value = obj[key];
-		// 判断属性为为对象后递归
-		if (value && typeof value === 'object') {
+		// 判断属性为对象后递归
+		if (value && typeof value === 'object' && !Array.isArray(value)) {
 			Object.keys(value).forEach( index => {
 				new Observer(value);
 			})
@@ -68,7 +68,7 @@ function Dep(){
 	}
 
 	// 通知watcher
-	this.notify = function(){
+	this.notify = () => {
 		this.subs.forEach( watcher => {
 			watcher.update();
 		});

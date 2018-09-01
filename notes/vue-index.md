@@ -9,7 +9,7 @@
 
     |—  flow Vue使用了Flow来进行静态类型检查，这里定义了声明了一些静态类型
 
-    |—  packages vue还可以分别生成其它的npm包
+    |—  packages vue生成的其它的npm包
     
     |—  script 打包相关的配置文件
 
