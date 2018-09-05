@@ -137,7 +137,7 @@ export function initState (vm: Component) {
   }
 }
 ```
-以data为例，找到`initData`方法
+`initState`方法完成了options中数据相关的属性的处理，以data为例，找到`initData`方法
 ```javascript
 function initData (vm: Component) {
   let data = vm.$options.data
@@ -190,7 +190,7 @@ export function proxy (target: Object, sourceKey: string, key: string) {
   Object.defineProperty(target, key, sharedPropertyDefinition)
 }
 ```
-`proxy`方法通过`Object.defineProperty`将`target[sourceKey][key]`的读写修改为`target[key]`，所以我们可以通过`this.xxx`访问到`this._data.xxx`
+`proxy`方法中通过使用`Object.defineProperty`方法将`target[sourceKey][key]`的读写修改为`target[key]`，所以我们可以使用`this.xxx`访问到`this._data.xxx`
 
 ### Observer
 首先介绍一下`observe`这个方法，来到文件`src/core/observer/index.js`
@@ -327,6 +327,7 @@ export function defineReactive (
 这个方法就是最终对对象设置setter/getter的地方，也就是demo中Observer方法做的工作
 
 首先创建对应的`dep`，拿到对象自身的属性描述符，如果已经有setter/getter，在设置时会作为默认属性，而不会将其覆盖
+
 使用observe方法实现对对象属性的递归设置，保证所有子属性都被覆盖到，之后通过`Object.defineProperty`重新定义对象属性描述符
 
 ### Dep
