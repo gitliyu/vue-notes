@@ -41,8 +41,7 @@ function Observer(obj){
 	    		// 如果当前正有Watcher触发，将Watcher添加到队列中
 	    		// Dep方法会在下面介绍
 	    		if (Dep.target) {
-	    			// 当然，实际跟demo不同，添加的并不是相同的Dep.target
-	    			// 而是id增加之后的Watcher
+	    			// Watcher依赖收集
 	    			dep.addSub(Dep.target);
 	    		};
 	    		return value;
