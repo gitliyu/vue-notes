@@ -6,7 +6,7 @@ Observer是Vue很核心的一个功能，是实现数据双向绑定的关键，
 首先需要说明的是，Observer依赖于['Object.defineProperty()'](https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/Object/defineProperty)方法，这也是Vue不支持ie9以下浏览器的原因，关于这个方法可以点击查看文档
 
 数据驱动实现的基本原理就是，通过对象属性的get方法设置观察者，在数据变化也就是set方法触发时更新虚拟dom结构，在下次tick驱动视图更新
-
+!['响应式原理'](https://github.com/gitliyu/vue-notes/blob/master/images/observer-vue.png)
 主要分为以下三部分：
 1. Observer: Vue初始化时调用，递归地为data，props，computed对象所有属性设置setter/getter
 2. Watcher: 观察者，当监听的数据值修改时，执行响应的回调函数
@@ -392,7 +392,220 @@ export function popTarget () {
   Dep.target = targetStack.pop()
 }
 ```
+作为Observer和Watcher沟通的桥梁，dep主要做了两件事
+- 标记一个全局唯一的Watcher，内部维护一个Watcher的数组
+- 提供方法通知所有Watcher
 
 ### Watcher
+相比前两者，Watcher的功能就比较复杂了，它不仅用于依赖收集，响应数据变化触发回调，还被用于$watch api和指令，位于'src/core/observer/watcher.js'
+> 前方即将出现大量代码
+```javascript
+export default class Watcher {
+  ……
 
-> 未完待续
+  constructor (
+    vm: Component,
+    expOrFn: string | Function,   // 表达式，从这里解析出getter
+    cb: Function,     // 回调函数
+    options?: ?Object,
+    isRenderWatcher?: boolean
+  ) {
+    this.vm = vm
+    // 挂载watch
+    if (isRenderWatcher) {
+      vm._watcher = this
+    }
+    vm._watchers.push(this)
+    // options
+    if (options) {
+      this.deep = !!options.deep
+      this.user = !!options.user
+      this.computed = !!options.computed
+      this.sync = !!options.sync
+      this.before = options.before
+    } else {
+      this.deep = this.user = this.computed = this.sync = false
+    }
+    this.cb = cb
+    this.id = ++uid // uid for batching
+    this.active = true
+    this.dirty = this.computed // for computed watchers
+    // Watcher 实例持有的 Dep 实例的数组, 以及对应的set数据结构
+    this.deps = []
+    this.newDeps = []
+    this.depIds = new Set()
+    this.newDepIds = new Set()
+    this.expression = process.env.NODE_ENV !== 'production'
+      ? expOrFn.toString()
+      : ''
+    // 把表达式expOrFn解析成getter
+    if (typeof expOrFn === 'function') {
+      this.getter = expOrFn
+    } else {
+      this.getter = parsePath(expOrFn)
+      if (!this.getter) {
+        this.getter = function () {}
+        process.env.NODE_ENV !== 'production' && warn(
+          `Failed watching path: "${expOrFn}" ` +
+          'Watcher only accepts simple dot-delimited paths. ' +
+          'For full control, use a function instead.',
+          vm
+        )
+      }
+    }
+    if (this.computed) {
+      this.value = undefined
+      this.dep = new Dep()
+    } else {
+      this.value = this.get()
+    }
+  }
+
+  // 获得getter的值并且重新进行依赖收集
+  get () {
+    // 将自身watcher观察者实例放入target栈中并设置给Dep.target，用以依赖收集
+    pushTarget(this)
+    let value
+    const vm = this.vm
+    // 执行依赖收集
+    try {
+      value = this.getter.call(vm, vm)
+    } catch (e) {
+      if (this.user) {
+        handleError(e, vm, `getter for watcher "${this.expression}"`)
+      } else {
+        throw e
+      }
+    } finally {
+      // 如果存在deep，则触发每个深层对象的依赖，追踪其变化
+      if (this.deep) {
+        // 递归每一个对象或者数组，触发它们的getter，使得对象或数组的每一个成员都被依赖收集
+        traverse(value)
+      }
+      // 将观察者实例从target栈中取出并设置给Dep.target
+      popTarget()
+      this.cleanupDeps()
+    }
+    return value
+  }
+
+  // 将Watcher添加到Deps集合中
+  addDep (dep: Dep) {
+    const id = dep.id
+    if (!this.newDepIds.has(id)) {
+      this.newDepIds.add(id)
+      this.newDeps.push(dep)
+      if (!this.depIds.has(id)) {
+        dep.addSub(this)
+      }
+    }
+  }
+
+  // 清理所有依赖收集
+  cleanupDeps () {
+    let i = this.deps.length
+    while (i--) {
+      const dep = this.deps[i]
+      if (!this.newDepIds.has(dep.id)) {
+        dep.removeSub(this)
+      }
+    }
+    let tmp = this.depIds
+    this.depIds = this.newDepIds
+    this.newDepIds = tmp
+    this.newDepIds.clear()
+    tmp = this.deps
+    this.deps = this.newDeps
+    this.newDeps = tmp
+    this.newDeps.length = 0
+  }
+
+  // 响应数据变化触发的更新方法
+  update () {
+    /* istanbul ignore else */
+    if (this.computed) {
+      // 计算属性相关
+      if (this.dep.subs.length === 0) {
+        // 不希望执行计算，标记dirty
+        this.dirty = true
+      } else {
+        this.getAndInvoke(() => {
+          this.dep.notify()
+        })
+      }
+    } else if (this.sync) {
+      // 同步时直接渲染视图
+      this.run()
+    } else {
+      // 异步时加入Watcher队列
+      queueWatcher(this)
+    }
+  }
+
+  // 回调方法
+  run () {
+    if (this.active) {
+      this.getAndInvoke(this.cb)
+    }
+  }
+
+  getAndInvoke (cb: Function) {
+    // get操作在获取value本身也会执行getter从而调用update更新视图
+    const value = this.get()
+    if (
+      value !== this.value ||
+      // 即便值相同，拥有Deep属性的观察者以及在对象／数组上的观察者应该被触发更新，因为它们的值可能发生改变。
+      isObject(value) ||
+      this.deep
+    ) {
+      // set new value
+      const oldValue = this.value
+      this.value = value
+      this.dirty = false
+      // 触发回调
+      if (this.user) {
+        try {
+          cb.call(this.vm, value, oldValue)
+        } catch (e) {
+          handleError(e, this.vm, `callback for watcher "${this.expression}"`)
+        }
+      } else {
+        cb.call(this.vm, value, oldValue)
+      }
+    }
+  }
+
+  // 获取观察者的值
+  evaluate () {
+    if (this.dirty) {
+      this.value = this.get()
+      this.dirty = false
+    }
+    return this.value
+  }
+
+  // 收集该watcher的所有deps依赖
+  depend () {
+    if (this.dep && Dep.target) {
+      this.dep.depend()
+    }
+  }
+
+  // 将自身从所有依赖收集订阅列表删除
+  teardown () {
+    if (this.active) {
+      // remove self from vm's watcher list
+      // this is a somewhat expensive operation so we skip it
+      // if the vm is being destroyed.
+      if (!this.vm._isBeingDestroyed) {
+        remove(this.vm._watchers, this)
+      }
+      let i = this.deps.length
+      while (i--) {
+        this.deps[i].removeSub(this)
+      }
+      this.active = false
+    }
+  }
+}
+```
