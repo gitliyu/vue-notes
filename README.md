@@ -5,11 +5,12 @@
 1. ['源码目录结构'](https://github.com/gitliyu/vue-notes/blob/master/notes/vue-index.md)
 2. ['Vue实例化过程'](https://github.com/gitliyu/vue-notes/blob/master/notes/vue-define.md)
 3. ['Global API'](https://github.com/gitliyu/vue-notes/blob/master/notes/vue-global-api.md)
-4. 虚拟DOM及VNode节点
-5. Render方法解析
-6. 生命周期
-7. ['Observer与数据驱动原理'](https://github.com/gitliyu/vue-notes/blob/master/notes/vue-observer.md)
-8. Directive指令
+4. ['Observer与数据驱动原理'](https://github.com/gitliyu/vue-notes/blob/master/notes/vue-observer.md)
+5. ['VNode介绍'](https://github.com/gitliyu/vue-notes/blob/master/notes/vue-vnode.md)
+6. VirtualDOM实现分析
+7. Render和update方法
+8. 生命周期
 9. Compile编译原理
+10. 组件化
 
 > TODO
