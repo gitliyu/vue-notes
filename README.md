@@ -1,6 +1,6 @@
 # vue-notes
 
-最近开始研究Vue源码，在看的过程中自己做一些归纳总结，也可以在['我的博客'](https://www.liyu.fun)查看
+最近开始研究Vue源码，在看的过程中自己做一些归纳总结
 ### 目录
 1. ['源码目录结构'](https://github.com/gitliyu/vue-notes/blob/master/notes/vue-index.md)
 2. ['Vue实例化过程'](https://github.com/gitliyu/vue-notes/blob/master/notes/vue-define.md)
