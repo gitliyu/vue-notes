@@ -1,4 +1,4 @@
-# Observer与数据驱动原理
+# Observer与响应式数据
 Observer是Vue很核心的一个功能，是实现数据双向绑定的关键，这一篇就对这部分做一下介绍，对应源码文件夹`src/core/observer`
 
 参考： ['vue2.0-source'](https://github.com/liutao/vue2.0-source)  ['learnVue'](https://github.com/answershuto/learnVue)
