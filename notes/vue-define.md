@@ -251,7 +251,7 @@ export function initLifecycle (vm: Component) {
   vm._isBeingDestroyed = false
 }
 ```
-方法也是简单，定义了$parent、$root、$children属性，并且添加了一下生命周期的标识变量
+方法内容比较简单，定义了$parent、$root、$children属性，并且添加了一下生命周期的标识变量
 
 #### initRender
 ```javascript
