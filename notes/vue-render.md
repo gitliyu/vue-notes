@@ -112,7 +112,7 @@ new Watcher(vm, updateComponent, noop, {
   }
 }, true /* isRenderWatcher */)
 ```
-可以看到Watcher传入的回调方法是`updateComponent`
+可以看到Watcher传入的回调方法是`updateComponent`，如果已经该组件已经挂载过了则代表进入这个步骤是个更新的过程，触发beforeUpdate钩子函数
 ```javascript
 let updateComponent
 /* istanbul ignore if */
