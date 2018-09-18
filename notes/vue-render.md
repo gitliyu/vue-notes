@@ -173,6 +173,8 @@ Vue.prototype._update = function (vnode: VNode, hydrating?: boolean) {
 ```
 主要是执行了`__patch__`渲染函数，传入原生dom节点和生成的VNode，原型上的`__patch__`方法是在加载框架的时候注入的
 
+值得一提的是，这里的`hydrating`表示是否直接使用服务端渲染的DOM元素
+
 src/platforms/web/runtime/index.js
 ```javascript
 Vue.prototype.__patch__ = inBrowser ? patch : noop
