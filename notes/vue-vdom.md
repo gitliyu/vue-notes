@@ -2,9 +2,9 @@
 
 上一篇['数据驱动视图的方法'](https://github.com/gitliyu/vue-notes/blob/master/notes/vue-render.md)介绍到了，vue在调用`_update`方法更新虚拟dom元素的时候，执行的是`__patch__`渲染函数，那么什么是`__patch__`呢，下面介绍下主要的功能以及原理
 ### patch
-patch将新老VNode节点进行比对，然后将根据两者的比较结果进行最小单位地修改视图，而不是将整个视图根据新的VNode重绘。patch的核心在于diff算法，这套算法可以高效地比较Virtual DOM的变更，得出变化以修改视图
+`patch`将新老VNode节点进行比对，然后将根据两者的比较结果进行最小单位地修改视图，而不是将整个视图根据新的VNode重绘
 
-> 太长不看: patch方法只修改前后有差异的VNode
+`patch`的核心在于`diff`算法，这套算法可以高效地比较`Virtual DOM`的变更，得出变化以修改视图。值得一提的是，`patch`只会比较相同层次的VNode，而不是遍历父子节点
 
 首先看一下`patch`方法的代码，位于`src/core/vdom/patch.js`
 ```javascript
@@ -236,4 +236,4 @@ function patchVnode (oldVnode, vnode, insertedVnodeQueue, removeOnly) {
 8. 如果`oldVnode`有`children`，而`vnode`没有，清空文并并移除子节点
 9. 如果新旧VNode都没有`children`，`oldVnode`有`text`，`vnode`没有`text`，清空真实dom文本内容
 10. 如果新旧VNode的`text`不同，更新真实dom元素文本内容
-11. 调用 postpatch 钩子
+11. 调用`postpatch`钩子
