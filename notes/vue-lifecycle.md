@@ -5,7 +5,7 @@
 生命周期是Vue中比较重要的一个概念，在Vue的执行过程中会在不同的时期创建钩子函数，方便我们在开发中使用
 
 这一篇就从源码角度来分析一下生命周期的整个流程，首先贴一下官网的生命周期流程图
-!('lifecycle')[https://github.com/gitliyu/vue-notes/blob/master/images/lifecycle.png]
+!['lifecycle'](https://github.com/gitliyu/vue-notes/blob/master/images/lifecycle.png)
 
 ### beforeCreate & created
 通过看图可以发现，这两个钩子是在Vue初始化阶段开始挂载的，关于初始化流程在最早的一篇['Vue实例化过程'](https://github.com/gitliyu/vue-notes/blob/master/notes/vue-define.md)有这部分的介绍，我们直接来到`initMixin`方法，找到一下代码，位于`src/core/instance/init.js`
@@ -49,8 +49,11 @@ export function callHook (vm: Component, hook: string) {
 }
 ```
 `callHook`方法接受两个参数，vm以及生命周期函数名
+
 首尾执行的`pushTarget`和`popTarget`方法是为了在调用生命周期钩子时禁用dep依赖收集，避免在某些生命周期钩子中收集冗余的依赖
+
 可以看到`callHook`的主要功能就是拿到`$options`上面定义的生命周期函数集合，判断存在时，就会进行调用
+
 在看这段代码时，还发现了一个彩蛋，就是最后的这部分代码，`vm._hasHookEvent`是在`initEvents` 函数中定义的，它的作用是判断是否存在生命周期钩子的事件侦听器，初始化值为false，当组件检测到存在生命周期钩子的事件侦听器时，会将`vm._hasHookEvent`设置为true，在每次生命周期函数调用时，都会使用`$emit`发送一个事件，那么就发现了一个很有意思的写法，举个栗子
 ```
 <child @hook:created="handleChildCreated">	
