@@ -101,8 +101,8 @@ const hasHandler = {
 总结一下，`_render`函数主要是获取到vm.$options.render函数，通过使用$createElement函数，创建并返回一个VNode，同时经过proxy代理检查属性是否满足要求
 
 ### Update
-我之前介绍过（['Observer与响应式数据'](https://github.com/gitliyu/vue-notes/blob/master/notes/vue-observer.md)），当页面绑定的数据修改时，会触发监听该数据的Watcher对象更新，触发回调方法，驱动视图进行更新
-而Watcher是在mount的时候被定义的，我们来到相关文件`src/core/instance/lifecycle.js`
+我之前介绍过（['Observer与响应式数据'](https://github.com/gitliyu/vue-notes/blob/master/notes/vue-observer.md)），当页面绑定的数据修改时，会触发监听该数据的Watcher对象更新，触发回调方法，驱动视图进行更新，
+而Watcher是在mount的时候被定义的，它被调用的时机有2个，一个是首次渲染，一个是数据更新的时候，我们来到相关文件`src/core/instance/lifecycle.js`
 ```javascript
 new Watcher(vm, updateComponent, noop, {
   before () {
