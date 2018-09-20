@@ -95,7 +95,7 @@ declare interface GlobalAPI {
 ```
 
 ### initUse 
-Vue.use方法用于安装插件
+`Vue.use`方法用于安装插件
 ```javascript
 export function initUse (Vue: GlobalAPI) {
   Vue.use = function (plugin: Function | Object) {
@@ -123,7 +123,7 @@ export function initUse (Vue: GlobalAPI) {
 ```
 
 ### initMixin
-Vue.mixin用于合并实例对象的options，使用了`util`文件中定义的`mergeOptions`方法
+`Vue.mixin`用于合并实例对象的options，使用了`util`文件中定义的`mergeOptions`方法
 ```javascript
 export function initMixin (Vue: GlobalAPI) {
   Vue.mixin = function (mixin: Object) {
@@ -157,7 +157,7 @@ export function initExtend (Vue: GlobalAPI) {
 ```
 
 ### initAssetRegisters
-也是比较好理解的，通过遍历添加了Vue.component，Vue.directive，Vue.filter三个静态方法
+也是比较好理解的，通过遍历添加了`Vue.component`，`Vue.directive`，`Vue.filter`三个静态方法
 ```javasript
 export function initAssetRegisters (Vue: GlobalAPI) {
   /**

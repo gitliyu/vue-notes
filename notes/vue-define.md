@@ -110,7 +110,7 @@ export function initMixin (Vue: Class<Component>) {
     // 一个防止vm实例自身被观察的标志位
     vm._isVue = true
 ```
-接下来合并了options配置，这样就可以通过vm.$options.el等访问到创建实例时传入的option
+接下来合并了`options`配置，这样就可以通过`vm.$options.el`等访问到创建实例时传入的`option`
 ```javascript
 // merge options
 if (options && options._isComponent) {
@@ -143,7 +143,7 @@ initProvide(vm) // resolve provide after data/props
 // 调用created钩子函数并且触发created钩子事件
 callHook(vm, 'created')
 ```
-最后是判断vm实例是否存在`vm.$options.el`，存在的话就将vm挂载到这个dom节点上，完成渲染，对于$mount以后会介绍
+最后是判断vm实例是否存在`vm.$options.el`，存在的话就将vm挂载到这个dom节点上，完成渲染，对于`$mount`在['生命周期'](https://github.com/gitliyu/vue-notes/blob/master/notes/vue-lifecycle.md)有介绍
 ```javascript
 if (vm.$options.el) {
   vm.$mount(vm.$options.el)
@@ -214,7 +214,7 @@ export function stateMixin (Vue: Class<Component>) {
   }
 }
 ```
-完成了对$data, $props, $set, $delete和$watch的定义
+完成了对`$data`, `$props`, `$set`, `$delete`和`$watch`的定义，将数据代理在`vm`上，在['Observer与响应式数据'](https://github.com/gitliyu/vue-notes/blob/master/notes/vue-observer.md)有这部分的介绍
 
 #### eventsMixin
 `eventsMixin`方法也是在Vue原型上简单粗暴的定义了以下事件
@@ -259,27 +259,18 @@ export function initLifecycle (vm: Component) {
 export function initRender (vm: Component) {
   vm._vnode = null // the root of the child tree
   vm._staticTrees = null
-  // the placeholder node in parent tree  父树中的占位符节点
+  // 父树中的占位符节点
   const parentVnode = vm.$vnode = vm.$options._parentVnode 
   const renderContext = parentVnode && parentVnode.context
   vm.$slots = resolveSlots(vm.$options._renderChildren, renderContext)
   vm.$scopedSlots = emptyObject
-  // bind the createElement fn to this instance
-  // so that we get proper render context inside it.
-  // args order: tag, data, children, normalizationType, alwaysNormalize
-  // internal version is used by render functions compiled from templates
-  /*
-    将createElement函数绑定到该实例上，该vm存在闭包中，不可修改，vm实例则固定。这样我们就可以得到正确的上下文渲染
-  */
+
+  // 注册createElement方法
   vm._c = (a, b, c, d) => createElement(vm, a, b, c, d, false)
-  // normalization is always applied for the public version, used in
-  // user-written render functions.
-  // 常规方法呗用于公共版本，被用来作为用户界面的渲染方法
   vm.$createElement = (a, b, c, d) => createElement(vm, a, b, c, d, true)
 }
 ```
-这里给vm添加了一些虚拟dom、slot等相关的属性和方法。
-然后会调用beforeCreate钩子函数
+这里给vm添加了一些虚拟dom、slot等相关的属性和方法，并将`createElement`方法注册在了vm上，`createElement`用于创建虚拟dom节点`VNode`，会在['数据驱动视图的方法'](https://github.com/gitliyu/vue-notes/blob/master/notes/vue-render.md)进行详细介绍
 
 #### renderMixin
 主要做了两件事，绑定了$nextTick事件以及VNode相关的定义
@@ -296,5 +287,6 @@ export function renderMixin (Vue: Class<Component>) {
   Vue.prototype._render = function (): VNode {}
 }
 ```
+关于`_render`渲染函数会在['数据驱动视图的方法'](https://github.com/gitliyu/vue-notes/blob/master/notes/vue-render.md)进行详细介绍
 
-> 总结： 在Vue实例化的过程中，主要完成了对配置的合并，对生命周期、事件中心、data、props、computed、渲染等得初始化，并通过对el的判断完成实例在DOM上的挂载
+> 总结： 在Vue实例化的过程中，主要完成了对配置的合并，对生命周期、事件中心、`data`、`props`、`computed`、渲染方法等得初始化，并通过对`el`的判断完成实例在DOM上的挂载

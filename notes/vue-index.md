@@ -3,15 +3,15 @@
 
 参考： ['vue2.0-source'](https://github.com/liutao/vue2.0-source)  ['vue-analysis'](https://github.com/ustbhuangyi/vue-analysis)
 
-    |—  dist 打包之后文件所在位置
+    |—  dist 打包文件目录
 
-    |—  examples 部分示例
+    |—  examples 示例
 
-    |—  flow Vue使用了Flow来进行静态类型检查，这里定义了声明了一些静态类型
+    |—  flow 定义Flow静态类型
 
     |—  packages vue生成的其它的npm包
     
-    |—  script 打包相关的配置文件
+    |—  script 打包配置文件
 
     |—  src 主要源码所在位置
 
@@ -31,7 +31,7 @@
 
             |— instance 实例相关内容，包括实例方法，生命周期，事件等
 
-            |— observer 观察者，双向数据绑定相关文件
+            |— observer 响应式数据，观察者
 
             |— util 工具函数
 
