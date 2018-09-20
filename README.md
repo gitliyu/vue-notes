@@ -10,7 +10,7 @@
 6. ['数据驱动视图的方法'](https://github.com/gitliyu/vue-notes/blob/master/notes/vue-render.md)
 7. ['Patch与Diff算法'](https://github.com/gitliyu/vue-notes/blob/master/notes/vue-vdom.md)
 8. ['生命周期'](https://github.com/gitliyu/vue-notes/blob/master/notes/vue-lifecycle.md)
-9. Compile编译原理
+9. ['Vue实例属性'](https://github.com/gitliyu/vue-notes/blob/master/notes/vue-attr.md)
 10. 组件化
 
 > TODO
