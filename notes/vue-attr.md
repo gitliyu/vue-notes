@@ -3,12 +3,12 @@
 
 参考： ['vue2.0-source'](https://github.com/liutao/vue2.0-source) 
 
-`Vue`实例是以组件的形式展现的，想要看到所有实例属性，可以找到对于`component`这一类型的`Flow`定义，位于`flow/component.js`，只贴出相关代码
+`Vue`实例是以组件的形式展现的，想要看到所有实例属性，可以找到对于`component`这一类型的`Flow`定义，位于`flow/component.js`，这里只贴出相关代码
 ```javascript
 declare interface Component {
   ……
 
-  // 公共属性，可供开发者使用的
+  // 供开发者使用的公共属性
   $el: any; // 组件对应的元素
   $data: Object;	// 数据
   $props: Object;	// 传入的props数据
@@ -24,7 +24,7 @@ declare interface Component {
   $listeners: { [key: string]: Function | Array<Function> };	// 事件监听
   $isServer: boolean;	// 是否服务端渲染
 
-  // 公共方法
+  // 供开发者使用的公共方法
   $mount: (el?: Element | string, hydrating?: boolean) => Component;
   $forceUpdate: () => void;
   $destroy: () => void;
@@ -81,7 +81,7 @@ declare interface Component {
   ……
 };
 ```
-接下来看一下`vm.$options`上面的属性，同样找到这一类型的`Flow`定义，位于`flow/options.js`
+接下来看一下`vm.$options`上面的属性，除了少部分私有属性外，其他都是我们在创建`vue`实例时传入的数据，同样找到这一类型的`Flow`定义，位于`flow/options.js`
 ```javascript
 declare type ComponentOptions = {
   componentId?: string;
