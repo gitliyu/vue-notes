@@ -9,8 +9,8 @@
 5. ['VNode介绍'](https://github.com/gitliyu/vue-notes/blob/master/notes/vue-vnode.md)
 6. ['数据驱动视图的方法'](https://github.com/gitliyu/vue-notes/blob/master/notes/vue-render.md)
 7. ['Patch与Diff算法'](https://github.com/gitliyu/vue-notes/blob/master/notes/vue-vdom.md)
-8. ['生命周期'](https://github.com/gitliyu/vue-notes/blob/master/notes/vue-lifecycle.md)
-9. ['Vue实例属性'](https://github.com/gitliyu/vue-notes/blob/master/notes/vue-attr.md)
-10. ['异步更新机制'](https://github.com/gitliyu/vue-notes/blob/master/notes/vue-nextTick.md)
+8. ['异步更新机制'](https://github.com/gitliyu/vue-notes/blob/master/notes/vue-nextTick.md)
+9. ['生命周期'](https://github.com/gitliyu/vue-notes/blob/master/notes/vue-lifecycle.md)
+10. ['Vue实例属性'](https://github.com/gitliyu/vue-notes/blob/master/notes/vue-attr.md) 
 
 > TODO

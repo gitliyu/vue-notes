@@ -160,7 +160,7 @@ update () {
   }
 }
 ```
-异步更新时触发`queueWatcher`方法，位于`src/core/observer/scheduler.js`，然后按步骤找
+异步更新时触发`queueWatcher`方法加入异步更新队列，位于`src/core/observer/scheduler.js`，然后按步骤找
 ```javascript
 function flushSchedulerQueue () {
   ……
