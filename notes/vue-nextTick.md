@@ -187,7 +187,7 @@ if (typeof Promise !== 'undefined' && isNative(Promise)) {
 ```
 在`next-tick.js`文件中声明了`microTimerFunc`和`macroTimerFunc`2个变量，并对其进行定义
 
-首先是`macroTimerFunc`，优先检测是否支持原生`setImmediate`，这是一个高版本`IE`和`Edge` 才支持的特性，不支持的话再去检测是否支持原生的`MessageChannel`，即`postMessage`和`onMessage`方法，如果也不支持的话就会使用`setTimeout`
+首先是`macroTimerFunc`，优先检测是否支持原生['setImmediate'](https://developer.mozilla.org/zh-CN/docs/Web/API/Window/setImmediate)，这是一个高版本`IE`和`Edge` 才支持的特性，不支持的话再去检测是否支持原生的['MessageChannel'](https://developer.mozilla.org/zh-CN/docs/Web/API/MessageChannel)，即`postMessage`和`onMessage`方法，如果也不支持的话就会使用`setTimeout`
 
 而对于`macroTimerFunc`的定义，会检测浏览器是否原生支持`Promise`，不支持的话直接指向`macroTimerFunc`的实现。
 

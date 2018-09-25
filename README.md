@@ -12,5 +12,6 @@
 8. ['异步更新机制'](https://github.com/gitliyu/vue-notes/blob/master/notes/vue-nextTick.md)
 9. ['生命周期'](https://github.com/gitliyu/vue-notes/blob/master/notes/vue-lifecycle.md)
 10. ['Vue实例属性'](https://github.com/gitliyu/vue-notes/blob/master/notes/vue-attr.md) 
+11. 指令
 
 > TODO
