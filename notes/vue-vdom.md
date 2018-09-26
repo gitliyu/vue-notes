@@ -114,9 +114,8 @@ return function patch (oldVnode, vnode, hydrating, removeOnly) {
 总结一下patch的逻辑
 1. vnode不存在但是oldVnode存在，调用`invokeDestroyHook`来进行销毁
 2. vnode存在但是oldVnode不存在，调用`createElm`来创建新节点
-3. 当vnode和oldVnode都存在时
-    1. oldVnode和vnode是同一个节点，就调用`patchVnode`来进行patch
-    2. 当vnode和oldVnode不是同一个节点时，如果oldVnode是真实dom节点且为服务器端渲染，需要用`hydrate`函数将虚拟dom和真实dom进行映射，然后将oldVnode设置为对应的虚拟dom，找到oldVnode.elm的父节点，根据vnode创建一个真实dom节点并插入到该父节点中oldVnode.elm的位置
+3. vnode和oldVnode都存在，且oldVnode和vnode是同一个节点，就调用`patchVnode`来进行patch
+4. vnode和oldVnode都存在，且vnode和oldVnode不是同一个节点时，如果oldVnode是真实dom节点且为服务器端渲染，需要用`hydrate`函数将虚拟dom和真实dom进行映射，然后将oldVnode设置为对应的虚拟dom，找到oldVnode.elm的父节点，根据vnode创建一个真实dom节点并插入到该父节点中oldVnode.elm的位置
 
 抛开生命周期钩子函数先不谈，里面值得注意的方法有几个
 - createElm: 用于创建真实dom元素，这一篇就不具体看了
