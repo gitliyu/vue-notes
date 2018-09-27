@@ -11,8 +11,8 @@
 	 - **history** - 路由方式的封装方法
 	 - **util** - 各种功能类和功能函数
 	 - **create-matcher** - 生成匹配表
-	 - **create-router-mapr** - 生成匹配表
+	 - **create-router-map** - 生成匹配表
 	 - **index** - 定义`VueRouter`，入口文件
 	 - **Install** - 提供安装方法
  - **test** - 测试文件
- - **types** - typescript相关
+ - **types** - `typescript`相关
