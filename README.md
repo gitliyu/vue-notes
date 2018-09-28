@@ -17,3 +17,4 @@
 ### vue-router
 1. ['源码目录结构'](https://github.com/gitliyu/vue-notes/blob/master/vue-router/router-index.md)
 2. ['Install安装方法'](https://github.com/gitliyu/vue-notes/blob/master/vue-router/router-install.md)
+3. ['VueRouter类介绍'](https://github.com/gitliyu/vue-notes/blob/master/vue-router/router-define.md)

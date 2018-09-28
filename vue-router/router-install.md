@@ -73,6 +73,6 @@ export function install (Vue) {
 }
 ```
 总结一下`router`安装过程中做的几件事
-1. 对`Vue`实例混入生命周期钩子
-2. 在`Vue`原型上定义`$router`和`$route`，方便所有组件可以获取这两个属性） 
-3. 全局注册`router-link`和`router-view`两个组件
+- 对`Vue`实例混入生命周期钩子
+- 在`Vue`原型上定义`$router`和`$route`，方便所有组件可以获取这两个属性） 
+- 全局注册`router-link`和`router-view`两个组件
