@@ -120,6 +120,124 @@ function registerHook (list: Array<any>, fn: Function): Function {
   }
 }
 ```
-what?这怎么这么简单，这里只是将回调函数方法`push`进对应的数组中，并且进行了去重的操作
+这里的操作非常简单，只是将回调函数方法`push`进对应的数组中，并且进行了去重的操作，之后会在路由导航的各个阶段触发其中的回调方法
+```javascript
+onReady (cb: Function, errorCb?: Function) {
+  this.history.onReady(cb, errorCb)
+}
 
-> 未完待续
+onError (errorCb: Function) {
+  this.history.onError(errorCb)
+}
+
+push (location: RawLocation, onComplete?: Function, onAbort?: Function) {
+  this.history.push(location, onComplete, onAbort)
+}
+
+replace (location: RawLocation, onComplete?: Function, onAbort?: Function) {
+  this.history.replace(location, onComplete, onAbort)
+}
+
+go (n: number) {
+  this.history.go(n)
+}
+
+back () {
+  this.go(-1)
+}
+
+forward () {
+  this.go(1)
+}
+```
+这些就是`router`上面挂载的各种事件了，在调用时会根据`history`类型做出响应，除此之外还有剩下的几个事件
+```
+getMatchedComponents (to?: RawLocation | Route): Array<any> {
+  const route: any = to
+    ? to.matched
+      ? to
+      : this.resolve(to).route
+    : this.currentRoute
+  // 没有目标路由时返回空数组
+  if (!route) {
+    return []
+  }
+  // 根据route查询匹配信息
+  return [].concat.apply([], route.matched.map(m => {
+    return Object.keys(m.components).map(key => {
+      return m.components[key]
+    })
+  }))
+}
+```
+`getMatchedComponents`方法返回目标位置或是当前路由匹配的组件数组
+```javascript
+resolve (
+  to: RawLocation,
+  current?: Route,
+  append?: boolean
+): {
+  location: Location,
+  route: Route,
+  href: string,
+  // for backwards compat
+  normalizedTo: Location,
+  resolved: Route
+} {
+  // 对路由进行解析处理
+  const location = normalizeLocation(
+    to,
+    current || this.history.current,
+    append,
+    this
+  )
+  // 匹配对应的route
+  const route = this.match(location, current)
+  // 获取完整路径
+  const fullPath = route.redirectedFrom || route.fullPath
+  const base = this.history.base
+  const href = createHref(base, fullPath, this.mode)
+  return {
+    location,
+    route,
+    href,
+    // for backwards compat
+    normalizedTo: location,
+    resolved: route
+  }
+}
+```
+首先使用`normalizeLocation`对参数进行解析处理，拿到`location`对象，接下来对`location`对象进行处理
+
+> 这里补充一下，使用路由对象的`resolve`方法解析路由，可以得到`location`,`router`,`href`等目标路由的信息，举个栗子
+
+```javascript
+const { href } = this.$router.resolve({
+  name: 'foo',
+  query: {
+    bar
+  }
+})
+window.open(href, '_blank')
+```
+方法接受的参数和`router-link`的`to`绑定的属性相同，会根据参数解析出路由信息，实现例如新页面打开路由页的功能
+
+```javascript
+addRoutes (routes: Array<RouteConfig>) {
+  // 向匹配表中添加路由信息
+  this.matcher.addRoutes(routes)
+  if (this.history.current !== START) {
+    this.history.transitionTo(this.history.getCurrentLocation())
+  }
+}
+```
+调用了`matcher`上的`addRoutes`方法动态添加路由，方法在`createMatcher`中被挂载，主要是调用了`createRouteMap`将路由信息添加到路由匹配表中，接下来来到文件底部
+```javascript
+VueRouter.install = install
+VueRouter.version = '__VERSION__'
+
+if (inBrowser && window.Vue) {
+  window.Vue.use(VueRouter)
+}
+```
+将`intall`安装方法和版本号注册在`VueRouter`类上，最后为了兼容`script`标签引入的方法，自调用了`Vue.use`安装
