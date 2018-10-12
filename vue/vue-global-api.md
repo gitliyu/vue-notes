@@ -1,7 +1,6 @@
 # Global API
 上一篇在入口文件中看到了`initGlobalAPI`方法，那么就来看一下`global-api`这个目录吧，Vue的静态方法大多都是在该文件夹定义的
 
-参考： ['learnVue'](https://github.com/answershuto/learnVue)
 ### 文件结构
 首先看一下文件结构，`index.js`里面的引入路径可以很清楚的看出来各个文件的作用，这一篇蛀牙介绍一下`global-api`目录，对于其他位置引入注册的方法暂时不去分析。
 ```

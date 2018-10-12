@@ -1,7 +1,5 @@
 # VNode介绍
 
-参考： ['vue-analysis'](https://github.com/ustbhuangyi/vue-analysis)   ['learnVue'](https://github.com/answershuto/learnVue)
-
 众所周知浏览器对于dom操作的成本是很大的，对于复杂交互而言，传统的Javascript需要不断的渲染dom结构，从而对于浏览器的性能造成了很大的压力。
 
 Vue将DOM抽象成一个以对象为节点的虚拟DOM树，以VNode节点模拟真实DOM，作为真实DOM的一层抽象

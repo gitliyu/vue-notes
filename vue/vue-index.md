@@ -1,7 +1,6 @@
 # 源码目录结构
 分析`Vue`源码的第一步，先了解源码中目录的设计和各个模块的功能，对应`Vue`版本为`2.5.17`，以后会对目录进行补充。
 
-参考： ['vue2.0-source'](https://github.com/liutao/vue2.0-source)  ['vue-analysis'](https://github.com/ustbhuangyi/vue-analysis)
 - **dist** - 打包文件目录
 - **examples** - 示例
 - **flow** - 定义`Flow`静态类型

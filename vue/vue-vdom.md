@@ -1,7 +1,5 @@
 # Patch与Diff算法
 
-参考： ['learnVue'](https://github.com/answershuto/learnVue)
-
 上一篇['数据驱动视图的方法'](https://github.com/gitliyu/vue-notes/blob/master/notes/vue-render.md)介绍到了，vue在调用`_update`方法更新虚拟dom元素的时候，执行的是`__patch__`渲染函数，那么什么是`__patch__`呢，下面介绍下主要的功能以及原理
 ### patch
 `patch`将新老VNode节点进行比对，然后将根据两者的比较结果进行最小单位地修改视图，而不是将整个视图根据新的VNode重绘

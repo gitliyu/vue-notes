@@ -1,7 +1,6 @@
 # Vue实例化过程
 首先来搞清楚Vue对象到底是什么，也就是说当我们使用import引入Vue时，代码的执行过程以及我们拿到的Vue对象是如何定义的，接下来一步步的翻下源码。
 
-参考： ['vue2.0-source'](https://github.com/liutao/vue2.0-source) ['Vue源码之new Vue'](https://blog.csdn.net/yayayayaya_/article/details/80885473) ['learnVue'](https://github.com/answershuto/learnVue)
 ### 入口文件
 首先第一步，我们打开`package.json`文件，找到以下代码
 ```json

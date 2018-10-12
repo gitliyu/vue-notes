@@ -1,8 +1,6 @@
 # Vue实例属性
 到了这一篇，基本上Vue原型上定义的大部分属性都认识了，就在这里进行一下归纳总结吧
 
-参考： ['vue2.0-source'](https://github.com/liutao/vue2.0-source) 
-
 `Vue`实例是以组件的形式展现的，想要看到所有实例属性，可以找到对于`component`这一类型的`Flow`定义，位于`flow/component.js`，这里只贴出相关代码
 ```javascript
 declare interface Component {

@@ -1,7 +1,5 @@
 # 生命周期
 
-参考： ['vue-analysis'](https://github.com/ustbhuangyi/vue-analysis)
-
 生命周期是Vue中比较重要的一个概念，在Vue的执行过程中会在不同的时期创建钩子函数，方便我们在开发中使用
 
 这一篇就从源码角度来分析一下生命周期的整个流程，首先贴一下官网的生命周期流程图

@@ -151,7 +151,7 @@ forward () {
 }
 ```
 这些就是`router`上面挂载的各种事件了，在调用时会根据`history`类型做出响应，除此之外还有剩下的几个事件
-```
+```javascript
 getMatchedComponents (to?: RawLocation | Route): Array<any> {
   const route: any = to
     ? to.matched

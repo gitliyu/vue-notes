@@ -1,8 +1,6 @@
 # Observer与响应式数据
 Observer是Vue很核心的一个功能，是实现数据双向绑定的关键，这一篇就对这部分做一下介绍，对应源码文件夹`src/core/observer`
 
-参考： ['vue2.0-source'](https://github.com/liutao/vue2.0-source)  ['learnVue'](https://github.com/answershuto/learnVue)
-
 首先需要说明的是，Observer依赖于['Object.defineProperty()'](https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/Object/defineProperty)方法，这也是Vue不支持ie9以下浏览器的原因，关于这个方法可以点击查看文档
 
 数据驱动实现的基本原理就是，通过对象属性的get方法设置观察者，在数据变化也就是set方法触发时更新虚拟dom结构，在下次tick驱动视图更新

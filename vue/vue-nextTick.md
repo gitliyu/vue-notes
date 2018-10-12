@@ -1,7 +1,5 @@
 # 异步更新机制
 
-参考： ['learnVue'](https://github.com/answershuto/learnVue)  ['vue-analysis'](https://github.com/ustbhuangyi/vue-analysis)
-
 首先来看一个小demo
 ```html
 <template>
