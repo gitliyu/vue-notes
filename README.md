@@ -18,6 +18,7 @@
 1. ['源码目录结构'](https://github.com/gitliyu/vue-notes/blob/master/vue-router/router-index.md)
 2. ['Install安装方法'](https://github.com/gitliyu/vue-notes/blob/master/vue-router/router-install.md)
 3. ['VueRouter类介绍'](https://github.com/gitliyu/vue-notes/blob/master/vue-router/router-define.md)
+3. ['路由匹配'](https://github.com/gitliyu/vue-notes/blob/master/vue-router/router-matcher.md)
 
 #### 技术支持
 - ['vue2.0-source'](https://github.com/liutao/vue2.0-source)  
