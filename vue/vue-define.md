@@ -109,7 +109,7 @@ export function initMixin (Vue: Class<Component>) {
     // 一个防止vm实例自身被观察的标志位
     vm._isVue = true
 ```
-接下来合并了`options`配置，这样就可以通过`vm.$options.el`等访问到创建实例时传入的`option`
+接下来合并了`options`配置，这样就可以通过`vm.$options`访问到创建实例时传入的`option`，当判断当前为组件时进行初始化配置，否则进行`options`的合并，这里主要是针对`vue.extend`方法，将构造函数调用时传入的`options`和自身`options`进行合并
 ```javascript
 // merge options
 if (options && options._isComponent) {
