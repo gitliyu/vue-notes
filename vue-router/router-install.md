@@ -74,5 +74,6 @@ export function install (Vue) {
 ```
 总结一下`router`安装过程中做的几件事
 - 对`Vue`实例混入生命周期钩子
+- 根据配置数组生成路由配置记录表，生成监控路由变化的hsitory对象
 - 在`Vue`原型上定义`$router`和`$route`，方便所有组件可以获取这两个属性） 
 - 全局注册`router-link`和`router-view`两个组件

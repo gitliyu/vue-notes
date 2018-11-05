@@ -150,7 +150,7 @@ forward () {
   this.go(1)
 }
 ```
-这些就是`router`上面挂载的各种事件了，在调用时会根据`history`类型做出响应，除此之外还有剩下的几个事件
+这些就是`router`上面挂载的各种事件了，在调用时会根据`history`类型做出响应，实际是调用的具体`history`对象的对应方法，除此之外还有剩下的几个事件
 ```javascript
 getMatchedComponents (to?: RawLocation | Route): Array<any> {
   const route: any = to
