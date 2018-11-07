@@ -5,12 +5,16 @@ this.matcher = createMatcher(options.routes || [], this)
 ```
 将传入的routes配置数组进行处理，得到路由匹配的详细信息，本文主要介绍一下`createMatcher`方法做了什么，来到`src/create-matcher.js`
 ```javascript
+import { createRoute } from './util/route'
+import { createRouteMap } from './create-route-map'
+
 export function createMatcher (
   routes: Array<RouteConfig>,
   router: VueRouter
 ): Matcher {
   const { pathList, pathMap, nameMap } = createRouteMap(routes)
 
+  // 将createRouteMap方法封装，以供vueRouter调用
   function addRoutes (routes) {
     createRouteMap(routes, pathList, pathMap, nameMap)
   }
@@ -50,7 +54,7 @@ export function createMatcher (
         }
       }
 
-      // 创建 route
+      // 有记录，返回创建 route
       if (record) {
         location.path = fillParams(record.path, location.params, `named route "${name}"`)
         return _createRoute(record, location, redirectedFrom)
@@ -66,11 +70,12 @@ export function createMatcher (
         }
       }
     }
-    // no match
+    // 没有匹配路由时，按照空记录进行处理
     return _createRoute(null, location)
   }
 
-  ……
+  function redirect () { …… }
+  function alias () { …… }
 
   //  创建路由route
   function _createRoute (
@@ -78,13 +83,14 @@ export function createMatcher (
     location: Location,
     redirectedFrom?: Location
   ): Route {
-  	// 重定向和别名逻辑
+  	// 重定向和别名逻辑，分别调用redirect和alias方法进行处理
     if (record && record.redirect) {
       return redirect(record, redirectedFrom || location)
     }
     if (record && record.matchAs) {
       return alias(record, location, record.matchAs)
     }
+    // 最终调用的是util中的createRoute方法创建route
     return createRoute(record, location, redirectedFrom, router)
   }
 
@@ -94,6 +100,6 @@ export function createMatcher (
   }
 }
 ```
-简单总结一下以上代码，根据传入的routes生成路由map对应表，并且返回match函数以及一个可以增加路由配置项addRoutes函数，以供VueRouter类调用
+简单总结一下以上代码，根据传入的`routes`生成路由匹配表，并且返回`match`函数以及一个可以增加路由配置项`addRoutes`函数，以供`VueRouter`类调用
 
 > 未完待续
