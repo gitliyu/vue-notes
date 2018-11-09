@@ -6,7 +6,7 @@ export default {
   // 函数式组件，无状态，无实例，用一个简单的 render 函数返回虚拟节点来渲染自身
   functional: true,  
   props: {
-  	// 视图名 默认为default
+    // 视图名 默认为default
     name: {
       type: String,
       default: 'default'
@@ -56,7 +56,7 @@ export default {
     const component = cache[name] = matched.components[name]
 
     // 附加实例注册钩子
-	// 这将在实例注入的生命周期钩子中调用，设置匹配的实例
+    // 这将在实例注入的生命周期钩子中调用，设置匹配的实例
     data.registerRouteInstance = (vm, val) => {
       const current = matched.instances[name]
       if (
@@ -68,7 +68,7 @@ export default {
     }
 
     // 同时在prepatch钩子中注册实例
-	//以防相同的组件实例在不同的路由中重用
+    //以防相同的组件实例在不同的路由中重用
     ;(data.hook || (data.hook = {})).prepatch = (_, vnode) => {
       matched.instances[name] = vnode.componentInstance
     }
