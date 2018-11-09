@@ -19,8 +19,9 @@
 2. ['Install安装方法'](https://github.com/gitliyu/vue-notes/blob/master/vue-router/router-install.md)
 3. ['VueRouter类介绍'](https://github.com/gitliyu/vue-notes/blob/master/vue-router/router-define.md)
 4. ['路由匹配'](https://github.com/gitliyu/vue-notes/blob/master/vue-router/router-matcher.md)
-5. router-link
-6. router-view
+5. ['RouterLink组件'](https://github.com/gitliyu/vue-notes/blob/master/vue-router/router-link.md)
+6. ['RouterView组件'](https://github.com/gitliyu/vue-notes/blob/master/vue-router/router-view.md)
+7. Hash和History模式
 
 #### 技术支持
 - ['vue2.0-source'](https://github.com/liutao/vue2.0-source)  
