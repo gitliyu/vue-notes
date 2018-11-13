@@ -7,7 +7,7 @@ const eventTypes: Array<Function> = [String, Array]
 export default {
   name: 'RouterLink',
   props: {
-  	// 表示目标路由，可以是字符串或者对象
+    // 表示目标路由，可以是字符串或者对象
     to: {
       type: toTypes,
       required: true
@@ -35,7 +35,7 @@ export default {
     }
   },
   render (h: Function) {
-  	// router实例和当前激活的route对象
+    // router实例和当前激活的route对象
     const router = this.$router
     const current = this.$route
     // 根据当前目标和当前激活的route匹配结果
@@ -64,7 +64,7 @@ export default {
       ? createRoute(null, location, null, router)
       : route
 
-	// 严格模式的class，判断是否是相同路由（path query params hash）
+    // 严格模式的class，判断是否是相同路由（path query params hash）
     classes[exactActiveClass] = isSameRoute(current, compareTarget)
     // 对于activeClass，如果是严格模式的话，使用严格模式的class
     // 否则就走包含逻辑（path包含，query包含 hash为空或者相同） 
