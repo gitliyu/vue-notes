@@ -21,7 +21,7 @@
 4. ['路由匹配'](https://github.com/gitliyu/vue-notes/blob/master/vue-router/router-matcher.md)
 5. ['RouterLink组件'](https://github.com/gitliyu/vue-notes/blob/master/vue-router/router-link.md)
 6. ['RouterView组件'](https://github.com/gitliyu/vue-notes/blob/master/vue-router/router-view.md)
-7. Hash和History模式
+7. ['前端路由实现：Hash和History模式'](https://github.com/gitliyu/vue-notes/blob/master/vue-router/router-history.md)
 
 #### 技术支持
 - ['vue2.0-source'](https://github.com/liutao/vue2.0-source)  
