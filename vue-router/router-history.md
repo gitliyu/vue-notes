@@ -12,4 +12,65 @@
 2. 在初始化对应的`history`之前，会对`mode`做一些校验：默认为'hash'；若浏览器不支持`HTML5History`（通过supportsPushState变量判断），则`mode`强制设为'hash'；若不是在浏览器环境下运行，则`mode`强制设为'abstract'
 3. `VueRouter`类中的`push()`, `replace()`等方法只是一个代理，实际是调用的具体`history`对象的对应方法，在`init()`方法中初始化时，也是根据`history`对象具体的类别执行不同操作
 
+### HashHistory
+首先来介绍一下浏览器`hash`的，比如
+```
+https://liyu.fun/#/index
+```
+`#`符号本身以及它后面的字符称之为`hash`，可通过`window.location.hash`属性读取，以上地址的`hash`值是`#/index`，它具有如下特点：
+- `hash`虽然出现在URL中，但不会被包括在HTTP请求中，因此，当`hash`发生改变时不会重新加载页面
+- 可以为hash的改变添加监听事件：
+```javascript
+window.addEventListener("hashchange", callback, false);
+```
+- 每一次改变`hash`，都会在浏览器的访问历史中增加一个记录
+
+利用`hash`的以上特点，就可以来实现前端路由“更新视图但不重新请求页面”的功能了，接下来看一下代码，以`push()`为例
+
+```javascript
+push (location: RawLocation, onComplete?: Function, onAbort?: Function) {
+  const { current: fromRoute } = this
+  this.transitionTo(location, route => {
+    pushHash(route.fullPath)
+    handleScroll(this.router, route, fromRoute, false)
+    onComplete && onComplete(route)
+  }, onAbort)
+}
+```
+`transitionTo`方法是父类中定义的是用来处理路由变化中的基础逻辑的，主要是依赖`pushHash`方法进行路由的切换
+```javascript
+function pushHash (path) {
+  if (supportsPushState) {
+    pushState(getUrl(path))
+  } else {
+    window.location.hash = path
+  }
+}
+```
+首先判断是否支持`History API`，如果支持的话，使用封装的`pushState`进行切换，否则直接修改浏览器`hash`，`hash`的改变会自动添加到浏览器的访问历史记录中。
+接下来是视图的更新，我们来看父类中相关的一些代码：
+```javascript
+transitionTo (location: RawLocation, onComplete?: Function, onAbort?: Function) {
+  const route = this.router.match(location, this.current)
+  this.confirmTransition(route, () => {
+    this.updateRoute(route)
+    ……
+  });
+}
+
+updateRoute (route: Route) {
+  const prev = this.current
+  this.current = route
+  this.cb && this.cb(route)
+  this.router.afterHooks.forEach(hook => {
+    hook && hook(route, prev)
+  })
+}
+
+listen (cb: Function) {
+  this.cb = cb
+}
+```
+可以看到，更新路由时调用了`History`中的`this.cb`方法，方法是通过History.listen(cb)进行设置的。回到VueRouter类定义中，找到了在init()方法中对其进行了设置：
+
 > todo
