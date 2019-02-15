@@ -71,6 +71,41 @@ listen (cb: Function) {
   this.cb = cb
 }
 ```
-可以看到，更新路由时调用了`History`中的`this.cb`方法，方法是通过History.listen(cb)进行设置的。回到VueRouter类定义中，找到了在init()方法中对其进行了设置：
+可以看到，更新路由时调用了`History`中的`this.cb`方法，方法是通过History.listen(cb)进行设置的。回到`VueRouter`类定义中，找到了在`init`方法中对其进行了设置：
+```javascript
+init (app: any /* Vue component instance */) {
+  this.apps.push(app);
+  history.listen(route => {
+    this.apps.forEach((app) => {
+      app._route = route
+    })
+  })
+}
+```
+接下来回到`install`方法，可以看到在安装时对实例进行了混入
+```javascript
+Vue.mixin({
+  beforeCreate () {
+    if (isDef(this.$options.router)) {
+      this._routerRoot = this
+      this._router = this.$options.router
+      this._router.init(this)
+      Vue.util.defineReactive(this, '_route', this._router.history.current)
+    } else {
+      this._routerRoot = (this.$parent && this.$parent._routerRoot) || this
+    }
+    registerInstance(this, this)
+  }
+})
+```
+可以看到这里在`beforeCreate`钩子中通过`Vue.util.defineReactive`定义了响应式的`_route`属性。所谓响应式属性，即当`_route`值改变时，会自动调用实例的`render`方法，来更新视图
+
+总结一下从设置路由到更新视图的过程：
+```javascript
+$router.push() => HashHistory.push() => History.transitionTo() => History.updateRoute() => vm.render()
+```
+
+### HTML5History
+History interface是浏览器历史记录栈提供的接口，通过`back()`, `forward()`, `go()`等方法，我们可以读取浏览器历史记录栈的信息，进行各种跳转操作，具体可以查看文档['History API'](https://developer.mozilla.org/zh-CN/docs/Web/API/History_API)
 
 > todo
