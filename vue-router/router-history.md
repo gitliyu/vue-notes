@@ -105,7 +105,66 @@ Vue.mixin({
 $router.push() => HashHistory.push() => History.transitionTo() => History.updateRoute() => vm.render()
 ```
 
-### HTML5History
-History interface是浏览器历史记录栈提供的接口，通过`back()`, `forward()`, `go()`等方法，我们可以读取浏览器历史记录栈的信息，进行各种跳转操作，具体可以查看文档['History API'](https://developer.mozilla.org/zh-CN/docs/Web/API/History_API)
+### HTML5 History
+`History interface`是浏览器历史记录栈提供的接口，通过`back()`, `forward()`, `go()`等方法，我们可以读取浏览器历史记录栈的信息，进行各种跳转操作，具体可以查看文档['History API'](https://developer.mozilla.org/zh-CN/docs/Web/API/History_API)
 
-> todo
+从HTML5开始，`History interface`提供了两个新的方法：`pushState()`, `replaceState()`使得我们可以对浏览器历史记录栈进行修改：
+```javascript
+window.history.pushState(stateObject, title, URL)
+window.history.replaceState(stateObject, title, URL)
+```
+- stateObject: 当浏览器跳转到新的状态时，将触发popState事件，该事件将携带这个stateObject参数的副本
+- title: 所添加记录的标题
+- URL: 所添加记录的URL
+
+这两个方法有个共同的特点：当调用他们修改浏览器历史记录栈后，虽然当前URL改变了，这就为单页应用前端路由“更新视图但不重新请求页面”提供了基础。
+来看一下这部分的源码
+```javascript
+push (location: RawLocation, onComplete?: Function, onAbort?: Function) {
+  const { current: fromRoute } = this
+  this.transitionTo(location, route => {
+    pushState(cleanPath(this.base + route.fullPath))
+    handleScroll(this.router, route, fromRoute, false)
+    onComplete && onComplete(route)
+  }, onAbort)
+}
+
+replace (location: RawLocation, onComplete?: Function, onAbort?: Function) {
+  const { current: fromRoute } = this
+  this.transitionTo(location, route => {
+    replaceState(cleanPath(this.base + route.fullPath))
+    handleScroll(this.router, route, fromRoute, false)
+    onComplete && onComplete(route)
+  }, onAbort)
+}
+
+export function pushState (url?: string, replace?: boolean) {
+  saveScrollPosition()
+  // try...catch the pushState call to get around Safari
+  // DOM Exception 18 where it limits to 100 pushState calls
+  const history = window.history
+  try {
+    if (replace) {
+      history.replaceState({ key: _key }, '', url)
+    } else {
+      _key = genKey()
+      history.pushState({ key: _key }, '', url)
+    }
+  } catch (e) {
+    window.location[replace ? 'replace' : 'assign'](url)
+  }
+}
+
+export function replaceState (url?: string) {
+  pushState(url, true)
+}
+```
+代码逻辑与`hash`模式基本类似，只不过将对`window.location.hash`直接进行赋值操作改为了调用`history.pushState()`和`history.replaceState()`方法
+
+### 对比两种模式
+当然除了`hash`和`history`模式外还有用于服务器端的`abstract`模式，这里就不进行介绍了，下面说一下这两种模式的区别
+- `hash`比较丑，而且对于原有参数的识别更丑，比如`www.baidu.com/sites?id=111`，在页面打开后会被识别成`www.baidu.com/sites?id#/index`
+- `pushState`设置的新URL可以是与当前URL同源的任意URL；而`hash`只可修改#后面的部分
+- `pushState`设置的新URL可以与当前URL一模一样，这样也会把记录添加到栈中；而`hash`设置的新值必须与原来不一样才会触发记录添加到栈中
+- `pushState`通过`stateObject`可以添加任意类型的数据到记录中；而`hash`只可添加短字符串
+- `pushState`修改后的URL在请求时会将完整的URL来发送给后台，请求源可能会造成服务器响应无效参数或其他原因，使用时需要后台配合；`hash`的修改不会影响服务器请求
