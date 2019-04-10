@@ -49,7 +49,7 @@ function Observer(obj) {
   })
 }
 ```
-可以看到，在Observer初始化时，首先会创建一个对应的Dep，之后会递归的为所有对象属性设置setter/getter
+可以看到，在Observer初始化时，首先会创建一个对应的Dep，之后会递归的为所有对象属性设置setter/getter，在响应式数据的get方法中进行依赖收集（收集对应的Watcher），set方法中触发Dep的notify方法，响应收集到的Watcher中的回调方法
 
 ```javascript
 function Dep() {
@@ -71,7 +71,7 @@ function Dep() {
   }
 }
 ```
-Dep内部对象的target为当前Watcher，同时自身也有一个数组属性用来存放Watcher队列
+Dep内部对象的target为当前响应的Watcher，同时自身也有一个数组用来存放收集到的Watcher队列
 
 ```javascript
 function Watcher(fn) {
@@ -106,6 +106,8 @@ Watcher内部的更新方法被触发时，会将自身存放在Dep上作为当�
   })
 </script>
 ```
+在`new Watcher()`的时候，由于首先自调用了回调方法，会触发`obj.a`对应的get方法，将依赖收集在Dep中维护的数组中
+
 接下来就可以调用Observer方法对对象属性进行设置了，执行之后将obj对象打印出来，可以看到如下结果
 
 !['Observer设置后的obj对象'](https://github.com/gitliyu/vue-notes/blob/master/images/observer.png)
