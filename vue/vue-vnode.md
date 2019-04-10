@@ -1,13 +1,11 @@
-# VNode介绍
+# Virtual DOM 介绍
 
-众所周知浏览器对于dom操作的成本是很大的，对于复杂交互而言，传统的Javascript需要不断的渲染dom结构，从而对于浏览器的性能造成了很大的压力。
+众所周知浏览器对于DOM操作的成本是很大的，对于复杂交互而言，需要不断的重绘DOM结构，从而对于浏览器的性能造成了很大的压力
 
-Vue将DOM抽象成一个以对象为节点的虚拟DOM树，以VNode节点模拟真实DOM，作为真实DOM的一层抽象
-
-在数据变化的过程中，我们只需要对这棵抽象树进行操作，在这个过程中真实DOM不会发生变化，Vue会在下一个时间循环中（nextTick），使用`diff`算法将VNode节点对比之后进行差异修改，得到需要修改的最小单位，再将这个单位的视图进行更新，减少了不必要的dom操作，提高了性能
+而`Virtual DOM`的主要思想就是将DOM抽象成一个以对象为节点的虚拟DOM树，以`VNode`节点模拟真实DOM，作为真实DOM的一层抽象，在由于交互等因素需要视图更新时，先通过对节点数据进行`diff`后得到差异结果后，再一次性对DOM进行批量更新操作，所有复杂曲折的更新逻辑都由虚拟的`Virtual DOM`处理完成，只将最终的更新结果发送给浏览器中的DOM树执行，这样就避免了冗余琐碎的DOM树操作负担，进而有效提高了性能
 
 ### VNode
-先来看一下VNode节点的结构，`src/core/vdom/vnode.js`
+先来看一下`VNode`节点的结构，每一个`VNode`对应一个真实的DOM对象，代码位于`src/core/vdom/vnode.js`
 ```javascript
 export default class VNode {
   constructor (
@@ -22,7 +20,7 @@ export default class VNode {
   ) {
   	// 标签名
     this.tag = tag
-    // 节点对应的对象，VNodeData类型，包含了具体的一些数据信息
+    // 节点对应的对象，VNodeData类型，包含了标签上的属性信息等
     this.data = data
     // 子节点数组
     this.children = children
@@ -66,8 +64,53 @@ VNode又分为以下几个类型
 - EmptyVNode：空节点，或者说是没有内容的注释节点
 - CloneVNode：克隆节点，可以是以上任意类型节点
 
+下面举个例子来看一下`VNode`的结构，如下的DOM结构
+```html
+<div id="app">
+  <div>Hello</div>
+  <ul>
+    <li class="item">item 1</li>
+    <li class="item">item 2</li>
+  </ul>
+</div>
+```
+来简单的写一下对应的`VNode`对象
+```javascript
+{
+  "tag": "div",
+  "data": {
+    "attr": {"id": "app"}
+  },
+  "children": [
+    {
+      "tag": "div",
+      "text": "Hello"
+    },
+    {
+      "tag": "ul",
+      "children": [
+        {
+          "tag": "li",
+          "data": {
+            "staticClass": "item"
+          },
+          "text": "item 1"
+        },
+        {
+          "tag": "li",
+          "data": {
+            "staticClass": "item"
+          },
+          "text": "item 2"
+        }
+      ]
+    }
+  ]
+}
+```
+
 ### createElement
-Vue使用`createElement`方法创建VNode对象，方法在`src/core/vdom/create-elemenet.js`中
+Vue使用`createElement`方法创建`VNode`对象，方法在`src/core/vdom/create-elemenet.js`中
 ```javascript
 export function createElement (
   context: Component,
@@ -186,5 +229,4 @@ export function _createElement (
   }
 }
 ```
-
-> 以后再补充吧，这部分我也没搞太清楚
+> 关于`Virtual DOM`的相关算法和渲染会在下篇详细介绍

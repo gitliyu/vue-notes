@@ -6,7 +6,7 @@
 2. ['Vue实例化过程'](https://github.com/gitliyu/vue-notes/blob/master/vue/vue-define.md)
 3. ['Global API'](https://github.com/gitliyu/vue-notes/blob/master/vue/vue-global-api.md)
 4. ['Observer与响应式数据'](https://github.com/gitliyu/vue-notes/blob/master/vue/vue-observer.md)
-5. ['VNode介绍'](https://github.com/gitliyu/vue-notes/blob/master/vue/vue-vnode.md)
+5. ['Virtual DOM 介绍'](https://github.com/gitliyu/vue-notes/blob/master/vue/vue-vnode.md)
 6. ['数据驱动视图的方法'](https://github.com/gitliyu/vue-notes/blob/master/vue/vue-render.md)
 7. ['Patch与Diff算法'](https://github.com/gitliyu/vue-notes/blob/master/vue/vue-vdom.md)
 8. ['异步更新机制'](https://github.com/gitliyu/vue-notes/blob/master/vue/vue-nextTick.md)

@@ -53,7 +53,7 @@ return function patch (oldVnode, vnode, hydrating, removeOnly) {
             )
           }
         }
-        // 不是服务器渲染或者合并到真实 DOM 失败，创建一个空节点替换原有节点
+        // 不是服务器渲染或者合并到真实dom失败，创建一个空节点替换原有节点
         oldVnode = emptyNodeAt(oldVnode)
       }
 
@@ -61,7 +61,7 @@ return function patch (oldVnode, vnode, hydrating, removeOnly) {
       const oldElm = oldVnode.elm
       const parentElm = nodeOps.parentNode(oldElm)
 
-      // 创建新节点
+      // 创建真实dom元素
       createElm(
         vnode,
         insertedVnodeQueue,
