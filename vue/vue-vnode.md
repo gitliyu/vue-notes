@@ -2,6 +2,28 @@
 
 众所周知浏览器对于DOM操作的成本是很大的，对于复杂交互而言，需要不断的重绘DOM结构，从而对于浏览器的性能造成了很大的压力
 
+### 为什么要用 Virtual DOM
+用我们传统的开发模式操作DOM时，比如在一次操作中，我需要更新10个DOM节点，浏览器收到第一个DOM请求后会马上执行流程，紧接着下一个DOM更新请求，最终执行10次，每次都需要执行后DOM节点都会发生变化，下次更新需要重新查询，举个例子
+```javascript
+<body>
+  <ul>
+    <li>item1</li>  
+    <li>item2</li>  
+    <li>item3</li>  
+    <li>item4</li>
+    <li>item5</li>
+  </ul>
+</body>
+<script type="text/javascript">
+  let ul = $('ul');
+  ul.children('li').eq(0).remove();
+  ul.children('li').eq(0).remove();
+  ul.children('li').eq(0).remove();
+  ul.children('li').eq(0).remove();
+</script>
+```
+上面的几次操作，每次将第一个li标签删除，而每次删除导致了DOM结构的变化，下一次操作时会重新查询并执行删除，白白浪费性能
+
 而`Virtual DOM`的主要思想就是将DOM抽象成一个以对象为节点的虚拟DOM树，以`VNode`节点模拟真实DOM，作为真实DOM的一层抽象，在由于交互等因素需要视图更新时，先通过对节点数据进行`diff`后得到差异结果后，再一次性对DOM进行批量更新操作，所有复杂曲折的更新逻辑都由虚拟的`Virtual DOM`处理完成，只将最终的更新结果发送给浏览器中的DOM树执行，这样就避免了冗余琐碎的DOM树操作负担，进而有效提高了性能
 
 ### VNode
