@@ -4,15 +4,18 @@
 
 ### 为什么要用 Virtual DOM
 用我们传统的开发模式操作DOM时，比如在一次操作中，我需要更新10个DOM节点，浏览器收到第一个DOM请求后会马上执行流程，紧接着下一个DOM更新请求，最终执行10次，每次都需要执行后DOM节点都会发生变化，下次更新需要重新查询，举个例子
-```javascript
+```html
 <body>
+  <div id="app">
+  <div>Hello</div>
   <ul>
-    <li>item1</li>  
-    <li>item2</li>  
-    <li>item3</li>  
-    <li>item4</li>
-    <li>item5</li>
+    <li class="item">item 1</li>
+    <li class="item">item 2</li>
+    <li class="item">item 3</li>
+    <li class="item">item 4</li>
+    <li class="item">item 5</li>
   </ul>
+</div>
 </body>
 <script type="text/javascript">
   let ul = $('ul');
